@@ -1,32 +1,26 @@
+
 data{
-
-#include "../input/rgy.stan"
-  real PM_alpha;
-  real PM_beta;
-  real PM_sigma;
-
-  real PS_alpha;
-  real PS_beta;
-  real PS_sigma;
-
-
+  int AT;
+  int N;
+  array[AT] real y;
+  array[N] int GT;  
 }
 
 parameters{
   array[N] real alpha;
-  array[N] real beta;
-  real<lower=0> sigma;
+  real beta;
+  array[N] real<lower=0> sigma;
 }
 
 model{
+  beta ~ normal(1,5);
+
   for(n in 1:N)
     {
-      beta[n] ~ normal(PM_beta,PS_beta);
-      alpha[n] ~normal(PM_alpha,PS_alpha);
-    
+      alpha[n] ~normal(0,0.1);
     }
 
-  sigma ~normal(PM_sigma,PS_sigma);
+  sigma ~normal(0,0.1);
   
   int pos=1;
   for(n in 1:N)
@@ -35,23 +29,32 @@ model{
       array[T] real yy=segment(y,pos,T);
       for(t in 2:T)
         {
-          yy[t] ~ normal(yy[t-1]*beta[n]+alpha[n] , sigma);
+          yy[t] ~ normal(yy[t-1]*beta+alpha[n] , sigma[n]);
         }
       pos +=T;
     }
 }
 
 generated quantities{
-  array[AT] real y_hat;//=rep_array(0,AT);
-  int pos=1;
-  for(n in 1:N)
-    {
-      int T=GT[n];
-      array[T] real yy=segment(y,pos,T);
-      for(t in 2:T)
-        y_hat[pos+t-1] = normal_rng(yy[t-1]*beta[n]+alpha[n] , sigma);
-      pos +=T;
-    }
+  //
+  array[AT-N] real y_hat=rep_array(0,AT-N);
+  array[AT-N] real log_lik;
+  {
+    int pos=1;
+    for(n in 1:N)
+      {
+        int T=GT[n];
+        array[T] real yy=segment(y,pos,T);
+        for(t in 2:T)
+          {
+            y_hat[pos+t-1-n] = normal_rng(yy[t-1]*beta+alpha[n] , sigma[n]);
+            log_lik[pos+t-1-n]=normal_lpdf(yy[t]|yy[t-1]*beta+alpha[n] , sigma[n]);
+          }
+        pos +=T;
+      }
+  }
 }
   
+
+
 
