@@ -14,10 +14,10 @@ parameters{
 }
 
 model{
-  beta ~ normal(1,5);
-  alpha ~normal(0,0.1);
+  beta ~ normal(0,5);
+  alpha ~normal(0,1);
 
-  sigma ~normal(0,0.1);
+  sigma ~normal(0,3);
   
   int pos=1;
   for(n in 1:N)

@@ -15,8 +15,8 @@ parameters{
 model{
   for(n in 1:N)
     {
-      beta[n] ~ normal(1,5);
-      alpha[n] ~normal(0,0.1);
+      beta[n] ~ normal(0,5);
+      alpha[n] ~normal(0,1);
     }
 
   sigma ~normal(0,0.1);
