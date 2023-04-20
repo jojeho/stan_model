@@ -11,8 +11,8 @@ data{
 
 parameters{
   ordered[K] mu;
-  vector<lower=0>[K] sigma;
-  //real<lower=0> sigma;
+  //vector<lower=0> sigma;
+  real<lower=0> sigma;
   simplex[K] tr[K];
   simplex[K] rho;
 
@@ -28,7 +28,7 @@ transformed parameters{
 
 
 model{
-  sigma ~ cauchy(0,3);
+  sigma ~ normal(0,1);
   tr  ~ dirichlet(rep_vector(dir_tr/(K),K));
   rho  ~dirichlet(rep_vector(dir_rho/K,K));
   mu ~normal(0,1);
@@ -47,7 +47,7 @@ model{
         {
           for(t in 1:T)
             {
-              ob[k,t]=normal_lpdf(yy[t]|mu[k] ,sigma[k]);
+              ob[k,t]=normal_lpdf(yy[t]|mu[k] ,sigma);
             }
         }
 

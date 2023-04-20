@@ -34,4 +34,16 @@ model {
 generated quantities {
   int<lower=1, upper=T> s;
   s = categorical_logit_rng(lp);
+  array[T] real log_lik;
+  for( t in 1:T)
+    {
+      if( t < s)
+        {
+          log_lik[t]=normal_lpdf(y[t] | mu1,sigma);
+        }
+      else
+        {
+          log_lik[t]=normal_lpdf(y[t] | mu2,sigma);
+        }
+    }
 }

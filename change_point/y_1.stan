@@ -25,14 +25,26 @@ transformed parameters {
 }
 model {
 
-  mu1 ~ normal(0,0.1);
-  mu2 ~ normal(0,0.1);
-  sigma1 ~ normal(0,0.1);
-  sigma2 ~ normal(0,0.1);
+  mu1 ~ normal(0,2);
+  mu2 ~ normal(0,2);
+  sigma1 ~ normal(0,1);
+  sigma2 ~ normal(0,1);
   target += log_sum_exp(lp);
 }
 
 generated quantities {
   int<lower=1, upper=T> s;
   s = categorical_logit_rng(lp);
+    array[T] real log_lik;
+  for( t in 1:T)
+    {
+      if( t < s)
+        {
+          log_lik[t]=normal_lpdf(y[t] | mu1,sigma1);
+        }
+      else
+        {
+          log_lik[t]=normal_lpdf(y[t] | mu2,sigma2);
+        }
+    }
 }

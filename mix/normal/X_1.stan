@@ -18,9 +18,9 @@ transformed parameters{
 
 model{
 
-  sigma ~ cauchy(0,3);
+  sigma ~ cauchy(0,5);
   //alpha ~normal(0,1);
-  mu ~normal(0,2);
+  mu ~normal(0,0.5);
   //  theta ~ dirichlet(rep_vector(0.3,K));
 
   
@@ -41,7 +41,8 @@ model{
 
 generated quantities{
   matrix[K,D] prob;
-    
+  vector[D] log_lik;
+  
    for(d in 1:D)
     {
       vector[K] log_theta=theta;
@@ -52,6 +53,8 @@ generated quantities{
               log_theta[k] *=exp(normal_lpdf(X[n,d]|mu[k] ,sigma));
             }
         }
+
+      log_lik[d]=log_sum_exp(log_theta);
       for(k in 1:K)
         prob[k,d] =log_theta[k]/sum(log_theta);
 

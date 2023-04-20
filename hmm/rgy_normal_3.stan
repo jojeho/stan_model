@@ -18,8 +18,8 @@ data{
 
 parameters{
   ordered[K] mu;
-  vector[K] sigma;
-  //real<lower=0> sigma;
+  //vector[K] sigma;
+  real<lower=0> sigma;
   simplex[K] tr[K];
   simplex[K] rho;
 

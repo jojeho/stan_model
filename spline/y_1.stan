@@ -110,14 +110,13 @@ parameters {
 }
 
 transformed parameters {
-
-
+  vector[num_data] Y_hat;
+  Y_hat=spline(X,a_raw,a0,tau,B,num_basis);
 }
 
 model {
   // Priors
-  vector[num_data] Y_hat;
-  Y_hat=spline(X,a_raw,a0,tau,B,num_basis);
+
   spline_lp(a_raw ,a0,sigma,tau);
   //Likelihood
   Y ~ normal(Y_hat, sigma);

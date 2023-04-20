@@ -29,10 +29,10 @@ transformed parameters{
 }
 
 model{
-  sigma ~ cauchy(0,3);
+  sigma ~ cauchy(0,1);
   tr  ~ dirichlet(rep_vector(dir_tr/(K),K));
   rho  ~dirichlet(rep_vector(dir_rho/K,K));
-  mu ~normal(0,1);
+  mu ~normal(0,0.5);
 
   int pos=1;
   for(n in 1:N)

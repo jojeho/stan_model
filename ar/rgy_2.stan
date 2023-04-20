@@ -15,11 +15,11 @@ parameters{
 model{
   for(n in 1:N)
     {
-      beta[n] ~ normal(0,5);
+      beta[n] ~ normal(0,1);
       alpha[n] ~normal(0,1);
     }
 
-  sigma ~normal(0,0.1);
+  sigma ~normal(0,1);
   
   int pos=1;
   for(n in 1:N)

@@ -10,18 +10,19 @@ data{
 
 
 parameters{
-  real alpha;
-  ordered[K] beta;
-  vector<lower=0>[K] sigma;
+  ordered[K] alpha;
+  real beta;
+  //vector<lower=0>[K] sigma;
+  real<lower=0> sigma;
   simplex[K] theta;
 }
 
 
 model{
 
-  sigma ~ normal(0,0.1);
-  alpha ~normal(0,1);
-  beta ~normal(0,10);
+  sigma ~ normal(0,3);
+  alpha ~normal(0,2);
+  beta ~normal(0,5);
   #theta ~ dirichlet(rep_vector(2/K,K));
 
   
@@ -38,7 +39,7 @@ model{
         {
           vector[K] log_theta=log(theta);
           for( k in 1:K)
-            log_theta[k] +=normal_lpdf(yy[t]|alpha+beta[k]*yy[t-1] ,sigma[k]);
+            log_theta[k] +=normal_lpdf(yy[t]|alpha[k]+beta*yy[t-1] ,sigma);
           target += log_sum_exp(log_theta);
         }
       
