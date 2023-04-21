@@ -1,6 +1,5 @@
-functions {
-  
   // ref: https://github.com/luisdamiano/gsoc17-hhmm/blob/master/hmm/stan/hmm-multinom.stan
+functions{
   matrix hmm_forward_prob(matrix log_omega, matrix Gamma, vector rho) {
     
     int n_state = rows(log_omega);
@@ -30,26 +29,4 @@ functions {
   } // !hmm_forward_prob
 
 
-  hmm_backward()
- { // Backward algorithm log p(x_{t+1:T} | z_t = j)
-    real accumulator[K];
-
-    for (j in 1:K)
-      unbeta_tk[T, j] = 1;
-
-    for (tforward in 0:(T-2)) {
-      int t;
-      t = T - tforward;
-
-      for (j in 1:K) { // j = previous (t-1)
-        for (i in 1:K) { // i = next (t)
-                         // Murphy (2012) Eq. 17.58
-                         // backwards t    + transition prob + local evidence at t
-            accumulator[i] = unbeta_tk[t, i] + log(A_ij[j, i]) + log(phi_k[i, x[t]]);
-          }
-        unbeta_tk[t-1, j] = log_sum_exp(accumulator);
-      }
-    }
-
-  
 }
