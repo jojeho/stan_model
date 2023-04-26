@@ -1,21 +1,12 @@
 #include "../lib.stan"
-
-data{
-  int N;
-  int D;
-  array[N] vector[D] X;
-  real dir_tr;
-  real dir_rho;
-  //  real sigma_prior;    
-  
-}
+#include "input.lstan"
 
 transformed data{
   int K =2;
   vector[N] x;
   for(t in 1:N)
     {
-      x[t]=t*0.01;
+      x[t]=t*0.1;
     }  
 }
 
@@ -41,19 +32,6 @@ transformed parameters{
     {
       Gamma[k,] = tr[k]';
     }
-  matrix[K,D] ob=rep_matrix(0,K,D);
-  for(d in 1:D)
-    {
-      for(k in 1:K)
-        {
-          for(n in  1:N)
-            {
-              ob[k,d] +=normal_lpdf(X[n,d]|x[n]*beta[k] ,sigma);
-            }
-          ob[k,d] -=log(N);
-        }
-    }
-  
 }
 
 
@@ -64,9 +42,7 @@ model{
   beta1 ~ von_mises(pi()*2,kappa); 
   beta2 ~ von_mises(-pi()*2,kappa);
   kappa~normal(5,2);
-  target += hmm_marginal(ob,Gamma,rho);
-}
 
-generated quantities{
-  matrix[K,D] prob=hmm_forward_prob(ob,Gamma,rho);
+  #include "reg_loglik.lstan"
 }
+#include "reg_gen.lstan"

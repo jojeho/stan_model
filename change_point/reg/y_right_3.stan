@@ -46,7 +46,7 @@ model {
 
   beta1 ~ von_mises(pi()/4,kappa);
   beta2 ~ von_mises(-pi()/4,kappa);
-  kappa~normal(6,1);
+  kappa~normal(8,1);
   //kappa2~normal(2,2);
   //a ~ gamma(2,1);
   //b ~ gamma(2,1);

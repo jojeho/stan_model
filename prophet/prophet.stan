@@ -80,27 +80,41 @@ data {
   int T;                // Number of time periods
   int<lower=1> K;       // Number of regressors
   vector[T] t;          // Time
+  vector[T] cap;        // Capacities for logistic trend
+  vector[T] y;          // Time series
   int S;                // Number of changepoints
   vector[S] t_change;   // Times of trend changepoints
+  matrix[T,K] X;        // Regressors
+  vector[K] sigmas;     // Scale on seasonality prior
   real<lower=0> tau;    // Scale on changepoints prior
+  int trend_indicator;  // 0 for linear, 1 for logistic, 2 for flat
+  vector[K] s_a;        // Indicator of additive features
+  vector[K] s_m;        // Indicator of multiplicative features
 }
 
 transformed data {
   matrix[T, S] A = get_changepoint_matrix(t, t_change, T, S);
+  matrix[T, K] X_sa = X .* rep_matrix(s_a', T);
+  matrix[T, K] X_sm = X .* rep_matrix(s_m', T);
 }
 
 parameters {
   real k;                   // Base trend growth rate
   real m;                   // Trend offset
   vector[S] delta;          // Trend rate adjustments
+  real<lower=0> sigma_obs;  // Observation noise
+  vector[K] beta;           // Regressor coefficients
 }
 
 transformed parameters {
   vector[T] trend;
-  matrix[T, S] z= get_changepoint_matrix(t, t_change, T, S);
-  
-  trend = linear_trend(k, m, delta, t, A, t_change);
-
+  if (trend_indicator == 0) {
+    trend = linear_trend(k, m, delta, t, A, t_change);
+  } else if (trend_indicator == 1) {
+    trend = logistic_trend(k, m, delta, t, cap, A, t_change, S);
+  } else if (trend_indicator == 2) {
+    trend = flat_trend(m, T);
+  }
 }
 
 model {
@@ -108,7 +122,14 @@ model {
   k ~ normal(0, 5);
   m ~ normal(0, 5);
   delta ~ double_exponential(0, tau);
+  sigma_obs ~ normal(0, 0.5);
+  beta ~ normal(0, sigmas);
 
   // Likelihood
-
+  y ~ normal_id_glm(
+    X_sa,
+    trend .* (1 + X_sm * beta),
+    beta,
+    sigma_obs
+  );
 }

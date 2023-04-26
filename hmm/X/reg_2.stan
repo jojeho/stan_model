@@ -11,7 +11,7 @@ data{
 }
 
 transformed data{
-  int K =2;
+  int K =3;
   vector[N] x;
   for(t in 1:N)
     {
@@ -35,6 +35,7 @@ transformed parameters{
 
   beta[1]=beta1;
   beta[2]=beta2;
+  beta[3]=0;
   
   matrix[K,K] Gamma= rep_matrix(0, K, K);
   for(k in 1:K)
@@ -67,6 +68,7 @@ model{
   target += hmm_marginal(ob,Gamma,rho);
 }
 
-generated quantities{
-  matrix[K,D] prob=hmm_forward_prob(ob,Gamma,rho);
-}
+/* generated quantities{ */
+/*   matrix[K,D] prob=hmm_forward_prob(ob,Gamma,rho); */
+/* } */
+

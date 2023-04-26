@@ -48,7 +48,8 @@ transformed parameters{
         {
           for(n in  1:N)
             {
-              ob[k,d] +=normal_lpdf(X[n,d]|x[n]*beta[k] ,sigma);
+              for(j in 1:J)
+                ob[k,d,j] =normal_lpdf(X[n,d]|x[n]*beta[k,j] ,sigma);
             }
           ob[k,d] -=log(N);
         }
@@ -61,8 +62,8 @@ model{
   sigma ~ normal(0,1);
   tr  ~ dirichlet(rep_vector(dir_tr/(K),K));
   rho  ~dirichlet(rep_vector(dir_rho/K,K));
-  beta1 ~ von_mises(pi()*2,kappa); 
-  beta2 ~ von_mises(-pi()*2,kappa);
+  beta1 ~ von_mises(pi()/4,kappa); 
+  beta2 ~ von_mises(-pi()/4,kappa);
   kappa~normal(5,2);
   target += hmm_marginal(ob,Gamma,rho);
 }

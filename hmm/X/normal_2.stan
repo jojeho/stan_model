@@ -59,11 +59,11 @@ transformed parameters{
 
 model{
   sigma ~ normal(0,1);
-  mu1 ~normal(-3,2);
+  mu1 ~student_t(5,-4,2);
   mu2 ~normal(-2,0.5);
-  mu3 ~normal(0,0.2);
+  mu3 ~normal(0,0.5);
   mu4 ~normal(2,0.5);
-  mu5 ~normal(3,2);
+  mu5 ~student_t(5,4,2);
   target += hmm_marginal(ob,Gamma,rho);
 }
 
