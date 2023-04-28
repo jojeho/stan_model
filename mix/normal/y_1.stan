@@ -14,9 +14,9 @@ parameters{
 
 model{
 
-  sigma ~ cauchy(0,0.5);
+  sigma ~ cauchy(0,2);
   //  alpha ~normal(0,0.1);
-  mu ~normal(0,0.1);
+  mu ~normal(0,1);
   //theta ~ dirichlet(rep_vector(2,K));
 
     int pos=1;
