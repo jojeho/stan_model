@@ -47,8 +47,8 @@ model{
   beta2 ~ von_mises(0,kappa);
   kappa~normal(5,2);
 
-  #include "reg_loglik.lstan"
+  #include "ar_loglik.lstan"
 
 }
-#include "reg_gen.lstan"
+#include "ar_gen.lstan"
 

@@ -1,0 +1,21 @@
+  int pos=1;
+  for(n in 1:N)
+    {
+      int T=GT[n];
+
+      matrix[K,T] ob;
+
+      array[T] real yy=segment(y,pos,T);
+      
+  
+      for(k in 1:K)
+        {
+          for(t in 1:T)
+            {
+              ob[k,t]=normal_lpdf(yy[t]|mu[k] ,sigma);
+            }
+        }
+
+      target += hmm_marginal(ob,Gamma,rho);
+      pos +=T;
+    }

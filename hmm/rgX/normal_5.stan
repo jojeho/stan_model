@@ -3,7 +3,7 @@
 
 
 transformed data{
-  int K=5;
+  int K=6;
 }
 
 parameters{
@@ -18,6 +18,9 @@ parameters{
   real mu3;
   real mu4;
   real mu5;
+  real mu6;
+
+  
   
   simplex[K] rho;
 }
@@ -31,6 +34,7 @@ transformed parameters{
   mu[3]=mu3;
   mu[4]=mu4;
   mu[5]=mu5;
+  mu[6]=mu6;
   
   
   for(k in 1:K)
@@ -44,13 +48,12 @@ transformed parameters{
 model{
   sigma ~ normal(0,0.1);
 
-
-  mu1 ~normal(0.1,0.05);
-  mu2 ~normal(0.05,0.05);
-  mu3 ~normal(0,0.05);
-  mu4 ~normal(-0.05,0.05);
+  mu1 ~normal(0.2,0.2);
+  mu2 ~normal(0.1,0.05);
+  mu3 ~normal(0.03,0.02);
+  mu4 ~normal(-0.03,0.02);
   mu5 ~normal(-0.1,0.05);
-    
+  mu6 ~normal(-0.2,0.2);
   
   rho  ~dirichlet(rep_vector(dir_rho/K,K));
 

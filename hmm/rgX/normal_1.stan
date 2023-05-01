@@ -37,8 +37,8 @@ transformed parameters{
 
 model{
   sigma ~ normal(0,0.2);
-  mu1 ~normal(0.2,0.1);
-  mu2 ~normal(-0.2,0.1);
+  mu1 ~normal(0.1,0.1);
+  mu2 ~normal(-0.1,0.1);
   rho  ~dirichlet(rep_vector(dir_rho/K,K));
 
 #include "normal_loglik.lstan"

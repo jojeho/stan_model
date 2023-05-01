@@ -42,11 +42,12 @@ model{
   sigma ~ normal(0,1);
   tr  ~ dirichlet(rep_vector(dir_tr/(K),K));
   rho  ~dirichlet(rep_vector(dir_rho/K,K));
-  beta1 ~ von_mises(pi(),kappa); 
-  beta3 ~ von_mises(-pi(),kappa);
-  beta2 ~ von_mises(0,kappa);
-  kappa~normal(5,2);
 
+  beta1 ~ normal(1.5,3);
+  beta3 ~ normal(0,2);
+  beta2 ~ normal(-1.5,3);
+
+  
   #include "reg_loglik.lstan"
 
 }

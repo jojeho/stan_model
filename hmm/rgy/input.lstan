@@ -1,0 +1,9 @@
+data{
+  int N;
+  int AT;
+  array[AT] real  y;
+  array[N] int GT;
+  int K;
+  real dir_tr;
+  real dir_rho;
+}

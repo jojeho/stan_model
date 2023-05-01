@@ -1,5 +1,5 @@
 #include "../lib.stan"
-#include "n_reg_input.stan"
+#include "input.lstan"
 
 transformed data{
   int K =3;
@@ -45,8 +45,10 @@ model{
   beta2 ~ von_mises(-pi()*2,kappa);
   kappa~normal(5,2);
 
-  #include "n_reg_oblik.stan"
+  #include "reg_loglik.lstan"
 
 }
+
+#include "reg_gen.lstan"
 
 
