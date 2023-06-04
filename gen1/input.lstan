@@ -1,0 +1,6 @@
+data {
+  int T;
+  array[T] real y;
+   int NT;
+  array[NT] real ny;
+}

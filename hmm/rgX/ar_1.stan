@@ -3,11 +3,6 @@
 
 transformed data{
   int K =3;
-  vector[N] x;
-  for(t in 1:N)
-    {
-      x[t]=t*0.1;
-    }  
 }
 
 parameters{
@@ -15,19 +10,24 @@ parameters{
   real<lower=0> sigma;
   simplex[K] tr[K];
   //  simplex[K] rho;
-  real beta1;
-  real beta2;
-  real beta3;
+  real<lower=0> beta1;
+  real<upper=0> beta2;
   real<lower=0> kappa;
-  simplex[K] rho;  
+  simplex[K] rho;
+  real alpha1;
+  real alpha2;
+
 }
 
 transformed parameters{
   vector[K] beta;
-
+  vector[K] alpha;
   beta[1]=beta1;
-  beta[2]=beta2;
-  beta[3]=beta3;
+  beta[2]=0;
+  beta[3]=beta2;
+  alpha[1]=alpha1;
+  alpha[2]=0;
+  alpha[3]=alpha2;
   
   matrix[K,K] Gamma= rep_matrix(0, K, K);
   for(k in 1:K)
@@ -42,13 +42,17 @@ model{
   sigma ~ normal(0,1);
   tr  ~ dirichlet(rep_vector(dir_tr/(K),K));
   rho  ~dirichlet(rep_vector(dir_rho/K,K));
+
   beta1 ~ von_mises(pi(),kappa); 
-  beta3 ~ von_mises(-pi(),kappa);
-  beta2 ~ von_mises(0,kappa);
+  beta2 ~ von_mises(-pi(),kappa);
+
+  alpha1 ~ normal(0,1);
+  alpha2 ~ normal(0,1);
+
   kappa~normal(5,2);
 
   #include "ar_loglik.lstan"
 
 }
-#include "ar_gen.lstan"
+//#include "ar_gen.lstan"
 

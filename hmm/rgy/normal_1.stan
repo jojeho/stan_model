@@ -6,12 +6,11 @@ parameters{
   real<lower=0> sigma;
   simplex[K] tr[K];
   simplex[K] rho;
-  real mu1;
-  real mu2;
+  vector[K] mu;
 }
 
 transformed parameters{
-  vector[K] mu;
+
   matrix[K,K] Gamma= rep_matrix(0, K, K);
   for(k in 1:K)
     {
@@ -21,10 +20,10 @@ transformed parameters{
 
 
 model{
-  sigma ~ normal(0,0.1);
+  sigma ~ normal(0,2);
   tr  ~ dirichlet(rep_vector(dir_tr/(K),K));
-  rho  ~dirichlet(rep_vector(dir_rho/K,K));
-  mu ~normal(0,1);
+  rho ~dirichlet(rep_vector(dir_rho/K,K));
+  mu  ~normal(0,1);
   
   #include "normal_loglik.lstan"
 }

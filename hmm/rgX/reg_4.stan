@@ -15,9 +15,9 @@ parameters{
   real<lower=0> sigma;
   simplex[K] tr[K];
   //  simplex[K] rho;
-  real beta1;
+  real<lower=0> beta1;
   real beta2;
-  real beta3;
+  real<upper=0> beta3;
   real<lower=0> kappa;
   simplex[K] rho;  
 }

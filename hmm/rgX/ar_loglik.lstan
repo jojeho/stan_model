@@ -7,9 +7,9 @@
         {
           for(k in 1:K)
             {
-              for(n in 1:N)
+              for(n in 2:N)
                 {
-                  ob[k,t] +=normal_lpdf(X[n,t+pos-1]|x[n]*beta[k] ,sigma);
+                  ob[k,t] +=normal_lpdf(X[n,t+pos-1]|X[n-1,t+pos-1]*beta[k]+alpha[k] ,sigma);
                 }
               ob[k,t] -=log(N);
             }

@@ -6,68 +6,53 @@ data{
   array[N] vector[D] X;
   real dir_tr;
   real dir_rho;
+  //  real sigma_prior;    
+  int K;
 }
 
-transformed data{
-  int K=5;
-}
 
 parameters{
-  
+  ordered[K] mu;
   //vector<lower=0>[K] sigma;
   real<lower=0> sigma;
   simplex[K] tr[K];
-  real mu1;
-  real mu2;
-  real mu3;
-  real mu4;
-  real mu5;
+  //  simplex[K] rho;
+  real<lower=0> beta1;
+  real<upper=0> beta2;
+  real<lower=0> kappa;
+  simplex[K] rho;  
 }
 
 transformed parameters{
-  matrix[K,K] Gamma= rep_matrix(0, K, K);
-  vector[K] mu;
-  simplex[K] rho;
-  mu[1]=mu1;
-  mu[2]=mu2;
-  mu[3]=mu3;
-  mu[4]=mu4;
-  mu[5]=mu5;
-  for(k in 1:K)
-    {
-      rho[k]=0.2;
-    }
   
+  matrix[K,K] Gamma= rep_matrix(0, K, K);
   for(k in 1:K)
     {
       Gamma[k,] = tr[k]';
     }
-
   matrix[K,D] ob=rep_matrix(0,K,D);
   for(d in 1:D)
     {
-      for(k in 1:K)
+      for(n in  1:N)
         {
-          for(n in 1:N)
-            {
-              ob[k,d] +=normal_lpdf(X[n,d]|mu[k] ,sigma);
-            }
+          for(k in 1:K)
+            ob[k,d] =normal_lpdf(X[n,d]|mu[k] ,sigma);
         }
     }
+  
 }
 
 
 model{
   sigma ~ normal(0,1);
-  mu1 ~normal(-3,2);
-  mu2 ~normal(-2,0.5);
-  mu3 ~normal(0,0.2);
-  mu4 ~normal(2,0.5);
-  mu5 ~normal(3,2);
+  tr  ~ dirichlet(rep_vector(dir_tr/(K),K));
+  rho  ~dirichlet(rep_vector(dir_rho/K,K));
+  beta1 ~ von_mises(pi()*2,kappa); 
+  beta2 ~ von_mises(-pi()*2,kappa);
+  kappa~normal(5,2);
   target += hmm_marginal(ob,Gamma,rho);
 }
 
 generated quantities{
-  //matrix[K,D] prob=hmm_hidden_state_prob(ob,Gamma,rho);
   matrix[K,D] prob=hmm_forward_prob(ob,Gamma,rho);
 }
