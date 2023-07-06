@@ -81,10 +81,10 @@ model{
   sigma ~ normal(0,3);
   tr  ~ dirichlet(rep_vector(1,K));
   rho  ~dirichlet(rep_vector(1,K));
-  mu1 ~normal(-2,2);
-  mu2 ~normal(-1,2);
-  mu3 ~normal(1,2);
-  mu4 ~normal(2,2);
+  mu1 ~normal(-4,2);
+  mu2 ~normal(-2,2);
+  mu3 ~normal(2,2);
+  mu4 ~normal(4,2);
 
   target += hmm_marginal(ob,Gamma,rho);
 }

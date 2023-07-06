@@ -38,7 +38,9 @@ transformed data{
 }
 
 parameters{
-  ordered [K] mu;
+  real mu1;
+  real mu2;
+  #ordered [K] mu;
   //vector<lower=0>[K] sigma;
   real<lower=0> sigma;
   
@@ -48,7 +50,10 @@ parameters{
 
 transformed parameters{
   matrix[K,T] ob;
-    
+  vector[K] mu;
+  mu[1]=mu1;
+  mu[2]=mu2;
+  
   for(k in 1:K)
     {
       for(t in 1:T)
@@ -75,7 +80,8 @@ model{
   sigma ~ cauchy(0,3);
   tr  ~ dirichlet(rep_vector(2/(K),K));
   rho  ~dirichlet(rep_vector(2/K,K));
-  mu ~normal(0,2);
+  mu1 ~normal(-3,3);
+  mu2 ~normal(3,3);
 
   target += hmm_marginal(ob,Gamma,rho);
 }

@@ -34,7 +34,7 @@ functions {
 #include "input.lstan"
 
 transformed data{
-  int K=3;
+  int K=5;
 }
 
 parameters{
@@ -43,9 +43,12 @@ parameters{
   
   simplex[K] tr[K];
   simplex[K] rho;
+
   real mu1;
   real mu2;
   real mu3;
+  real mu4;
+  real mu5;
 }
 
 transformed parameters{
@@ -54,6 +57,8 @@ transformed parameters{
   mu[1]=mu1;
   mu[2]=mu2;
   mu[3]=mu3;
+  mu[4]=mu4;
+  mu[5]=mu5;
   
   for(k in 1:K)
     {
@@ -71,8 +76,6 @@ transformed parameters{
     }
 
 
-  
-
   }
 
 
@@ -80,9 +83,11 @@ model{
   sigma ~ normal(0,3);
   tr  ~ dirichlet(rep_vector(1,K));
   rho  ~dirichlet(rep_vector(1,K));
-  mu1~ normal(-3,3);
-  mu2 ~normal(0,3);
-  mu3  ~normal(3,3);
+  mu1 ~normal(-3,2);
+  mu2 ~normal(-2,2);
+  mu3 ~normal(0,2);
+  mu4 ~normal(2,2);
+  mu5 ~normal(3,2);
 
   target += hmm_marginal(ob,Gamma,rho);
 }
