@@ -11,6 +11,7 @@ parameters{
   //vector<lower=0>[K] sigma;
   real<lower=0> sigma;
   simplex[K] tr[K];
+
   /* real<lower=0> mu1; */
   /* real<upper=0> mu2; */
   real mu1;

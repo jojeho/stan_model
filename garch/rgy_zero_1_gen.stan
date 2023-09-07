@@ -13,6 +13,7 @@ parameters {
 }
 
 generated quantities{
+  
   array[T] real sigma;
   sigma[1]=sigma1;
   for (t in 2:T)

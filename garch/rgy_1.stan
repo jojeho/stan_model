@@ -11,13 +11,15 @@ parameters {
   real<lower=0,upper=1> alpha1;
   real<lower=0,upper=(1-alpha1)> beta1;
   //array[N] real<lower=0> sigma1;
+  //vector<lower=0>[N] sigma1;
   real<lower=0> sigma1;
-  
 }
 
 model {
 
-  sigma1 ~normal(0,0.2);
+
+  sigma1 ~normal(0,0.5);
+  
   int pos=1;
   for(n in 1:N)
     {

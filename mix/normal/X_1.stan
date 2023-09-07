@@ -18,9 +18,9 @@ transformed parameters{
 
 model{
 
-  sigma ~ cauchy(0,5);
+  sigma ~ cauchy(0,10);
   //alpha ~normal(0,1);
-  mu ~normal(0,0.5);
+  mu ~normal(0,4);
   //  theta ~ dirichlet(rep_vector(0.3,K));
 
   
@@ -34,7 +34,7 @@ model{
               log_theta[k] +=normal_lpdf(X[n,d]|mu[k] ,sigma);
             }
         }
-      target += log_sum_exp(log_theta);
+      target += log_sum_exp(log_theta)-log(N);
     }
 }
 
@@ -50,14 +50,14 @@ generated quantities{
         {
           for(n in 1:N)
             {
-              log_theta[k] *=exp(normal_lpdf(X[n,d]|mu[k] ,sigma));
+              log_theta[k] +=normal_lpdf(X[n,d]|mu[k] ,sigma);
             }
         }
 
-      log_lik[d]=log_sum_exp(log_theta);
-      for(k in 1:K)
-        prob[k,d] =log_theta[k]/sum(log_theta);
-
+      
+      log_lik[d]=log_sum_exp(log_theta)-log(N);
+      prob[,d] =softmax(log_theta);
+      
     }
 }
 

@@ -25,10 +25,10 @@ transformed parameters {
 }
 model {
 
-  mu1 ~ normal(0,2);
-  mu2 ~ normal(0,2);
-  sigma1 ~ normal(0,1);
-  sigma2 ~ normal(0,1);
+  mu1 ~ normal(0,1);
+  mu2 ~ normal(0,1);
+  sigma1 ~ normal(0,0.5);
+  sigma2 ~ normal(0,0.5);
   target += log_sum_exp(lp);
 }
 

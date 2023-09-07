@@ -1,0 +1,10 @@
+data{
+  int N;
+  int AT;
+  int G;
+  array[AT] vector[G]  y;
+  array[N] int GT;
+  int K;
+  real dir_tr;
+  real dir_rho;
+}

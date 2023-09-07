@@ -1,5 +1,5 @@
-#include "../lib.stan"
-#include "input.lstan"
+
+#include "../lib.stan"#include "input.lstan"
 
 
 transformed data{

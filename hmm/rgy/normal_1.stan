@@ -25,8 +25,8 @@ model{
   rho ~dirichlet(rep_vector(dir_rho/K,K));
   mu  ~normal(0,1);
   
-  #include "normal_loglik.lstan"
+  //  #include "normal_loglik.lstan"
 }
 
-#include "normal_gen.lstan"
+//#include "normal_gen.lstan"
 

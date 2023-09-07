@@ -12,8 +12,8 @@ parameters{
 model{
 
   v ~ normal(0,10);
-  mu ~ normal(0,4);
-  sigma ~normal(0,4);
+  mu ~ normal(0,0.2);
+  sigma ~normal(0,3);
   y ~ student_t(v,mu,sigma);
   //x ~ v(mu,sigma);
 }

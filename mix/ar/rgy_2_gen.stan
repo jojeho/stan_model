@@ -33,15 +33,14 @@ model{
       matrix[K,T] ob;
 
       array[T] real yy=segment(y,pos,T);
+      vector[K] log_theta=log(theta);
 
       for(t in 2:T)
         {
-          vector[K] log_theta=log(theta);
           for( k in 1:K)
             log_theta[k] +=normal_lpdf(yy[t]|beta[k]*yy[t-1] ,sigma[k]);
-          target += log_sum_exp(log_theta);
         }
-      
+      target += log_sum_exp(log_theta);      
       pos +=T;
     }
   
@@ -49,27 +48,27 @@ model{
 
 generated quantities{
 
-  int pos=1;
-  array[N] real prob;
-  for(n in 1:N)
-    {
-      int T=GT[n];
+  array[N] vector[K] prob;
+  {
+    int pos=1;
+    for(n in 1:N)
+      {
+        int T=GT[n];
 
-      matrix[K,T] ob;
+        matrix[K,T] ob;
 
-      array[T] real yy=segment(y,pos,T);
+        array[T] real yy=segment(y,pos,T);
+        vector[K] log_theta=log(theta);
+        for(t in 2:T)
+          {
+            for( k in 1:K)
+              {
+                log_theta[k] +=normal_lpdf(yy[t]|beta[k]*yy[t-1] ,sigma[k]);
+              }
 
-      for(t in 2:T)
-        {
-          vector[K] log_theta=log(theta);
-          for( k in 1:K)
-            {
-              log_theta[k] +=normal_lpdf(yy[t]|beta[k]*yy[t-1] ,sigma[k]);
-            }
-        }
 
-      prob[n]=softmax(log_theta);
-      pos +=T;
-    }
-
+        prob[n]=softmax(log_theta);
+        pos +=T;
+      }
+  }
 }

@@ -1,5 +1,5 @@
 data{
-  #include "../input/y.stan"
+  #include "../../input/y.stan"
 }
 
 
@@ -11,44 +11,40 @@ transformed data {
   log_unif = -log(T);
   mu_prior=0.5;
   alpha_prior=0.5;
-  sigma_prior=1;
+  sigma_prior=0.05;
     
 }
 parameters {
   real mu1;
-  real mu2;
 
-  real<lower=0> alpha0_1;
-  real<lower=0,upper=1> alpha1_1;
-  real<lower=0,upper=(1-alpha1_1)> beta1_1;
-  
-  real<lower=0> alpha0_2;
-  real<lower=0,upper=1> alpha1_2;
-  real<lower=0,upper=(1-alpha1_2)> beta1_2;
-  
+  real<lower=0> alpha0;
+  real<lower=0,upper=1> alpha1;
+  real<lower=0,upper=(1-alpha1)> beta1;
+
   real<lower=0> sigma1_1;
   real<lower=0> sigma1_2;
+  real<lower=0> m_beta;
 }
 
 transformed parameters {
-
+  real mu2;
   vector[T] lp;
   vector<lower=0>[T] sigma_1;
   vector<lower=0>[T] sigma_2;
-  
+  mu2 = mu1*(-1)*m_beta;
   {
     sigma_1[1] = sigma1_1;
     sigma_2[1] = sigma1_2;
     
     for (t in 2:T)
       {
-        sigma_1[t] = sqrt(alpha0_1
-                          + alpha1_1 * pow(y[t-1] - mu1, 2)
-                          + beta1_1 * pow(sigma_1[t-1], 2));
+        sigma_1[t] = sqrt(alpha0
+                          + alpha1 * pow(y[t-1] - mu1, 2)
+                          + beta1 * pow(sigma_1[t-1], 2));
 
-        sigma_2[t] = sqrt(alpha0_2
-                          + alpha1_2 * pow(y[t-1] - mu2, 2)
-                          + beta1_2 * pow(sigma_2[t-1], 2));        
+        sigma_2[t] = sqrt(alpha0
+                          + alpha1 * pow(y[t-1] - mu2, 2)
+                          + beta1 * pow(sigma_2[t-1], 2));        
       }
 
     
@@ -66,26 +62,39 @@ transformed parameters {
   }   
 }
 model {
-  
-  alpha1_1 ~ normal(0,1);
-  alpha1_2 ~ normal(0,1);
 
-  alpha0_1 ~ normal(0,alpha_prior);
-  alpha0_2 ~ normal(0,alpha_prior);
+  m_beta ~ gamma(2,1);
   
-  beta1_1 ~ normal(0,1);
-  beta1_2 ~ normal(0,1);
+  alpha1 ~ normal(0,1);
+
+  alpha0 ~ normal(0,alpha_prior);
+  
+  beta1 ~ normal(0,1);
   
   sigma1_1 ~ normal(0,sigma_prior);
   sigma1_2 ~ normal(0,sigma_prior);
   mu1 ~ normal(0,mu_prior);
-  mu2 ~ normal(0,mu_prior);
 
   target += log_sum_exp(lp);
 }
 
 generated quantities {
   int<lower=1, upper=T> s;
-  array[T] real log_lik;  
+  array[T] real log_lik;
+  array[T] real y_hat;
   s = categorical_logit_rng(lp);
+  for(t in 1:T)
+    {
+      if( t < s)
+        {
+          log_lik[t]=normal_lpdf(y[t]|mu1,sigma_1[t]);
+          y_hat[t]=normal_rng(mu1,sigma_1[t]);
+        }
+      else
+        {
+          log_lik[t]=normal_lpdf(y[t]|mu2,sigma_2[t]);
+          y_hat[t]=normal_rng(mu2,sigma_2[t]);
+        }
+    }
+  
 }

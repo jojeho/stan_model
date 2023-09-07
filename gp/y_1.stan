@@ -30,7 +30,7 @@ parameters{
 
 
 model{
-  sigma ~normal(0,0.1);
+  sigma ~normal(0,1);
   tau ~ cauchy(0,Ps_tau);
   smooth~normal(0,Ps_smooth);
 

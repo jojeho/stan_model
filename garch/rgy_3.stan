@@ -2,8 +2,16 @@ data{
   #include "../input/rgy.stan"
 }
 
-transformed data{
+transformed data {
+  real alpha_prior;
+  real sigma_prior;
+  real mu_prior;
+  mu_prior=0.1;
+  alpha_prior=0.1;
+  sigma_prior=1;
+    
 }
+
 
 parameters {
   array[N] real  mu;
@@ -17,7 +25,13 @@ parameters {
 
 model {
 
-  sigma1 ~normal(0,5);
+  mu ~ normal(0,mu_prior);
+  alpha1 ~ normal(0,1);
+  alpha0 ~ normal(0,alpha_prior);
+  beta1 ~ normal(0,1);
+  sigma1 ~ normal(0,sigma_prior);
+
+  
   int pos=1;
   for(n in 1:N)
     {

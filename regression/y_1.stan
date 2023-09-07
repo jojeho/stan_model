@@ -14,10 +14,10 @@ parameters{
 }
 
 model{
-  sigma ~ cauchy(0,5);
-  alpha ~ normal(0,5);
+  sigma ~ normal(0,5);
+  alpha ~ normal(0,10);
   //  mu ~ normal(0,5);
-  beta ~ normal(0,5);
+  beta ~ cauchy(0,2.5);
 
   for(t in 1:T)
     {
@@ -26,12 +26,12 @@ model{
 }
 
 
-/* generated quantities{ */
-/*   vector[T] oblik; */
-/*   vector[T] y_hat; */
-/*   for(t in 1:T) */
-/*     { */
-/*       oblik[t]= normal_lpdf(y[t]|x[t]*beta+alpha,sigma); */
-/*       y_hat[t]= normal_rng(x[t]*beta+alpha,sigma); */
-/*     } */
-/* } */
+generated quantities{
+  vector[T] log_lik;
+  vector[T] y_hat;
+  for(t in 1:T)
+    {
+      log_lik[t]= normal_lpdf(y[t]|x[t]*beta+alpha,sigma);
+      y_hat[t]= normal_rng(x[t]*beta+alpha,sigma);
+    }
+}

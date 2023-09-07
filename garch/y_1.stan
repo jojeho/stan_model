@@ -26,11 +26,13 @@ transformed parameters {
 }
 
 model {
-  alpha0~normal(0,1);
-  
-  mu ~normal(0,1);
+
+  //alpha0~normal(0,1);
+  //alpha1 ~ normal(0,1);
+  //beta ~ normal(0,1);
+  //mu ~normal(0,1);
   y~ normal(mu, sigma);
-  sigma1 ~normal(0,3);
+  sigma1 ~normal(0,0.3);
 }
 
 /* generated quantities{ */

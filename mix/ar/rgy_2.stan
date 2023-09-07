@@ -34,15 +34,14 @@ model{
       matrix[K,T] ob;
 
       array[T] real yy=segment(y,pos,T);
+      vector[K] log_theta=log(theta);
 
       for(t in 2:T)
         {
-          vector[K] log_theta=log(theta);
           for( k in 1:K)
             log_theta[k] +=normal_lpdf(yy[t]|alpha[k]+beta*yy[t-1] ,sigma);
-          target += log_sum_exp(log_theta);
         }
-      
+      target += log_sum_exp(log_theta);
       pos +=T;
     }
   

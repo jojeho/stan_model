@@ -12,8 +12,8 @@ functions{
 }
 
 data{
-  int N;
-  vector[N] y;
+  int T;
+  vector[T] y;
 }
 
 parameters{
@@ -23,18 +23,19 @@ parameters{
 
 model{
 
-  mu ~ normal(0,4);
-  sigma ~normal(0,4);
+  mu ~ normal(0,0.2);
+  sigma ~normal(0,0.3);
   y ~ normal(mu,sigma);
   //x ~ v(mu,sigma);
 }
 
 generated quantities{
-  array[N] real log_lik;
-  array[N] real y_hat;
-  for(t in 1:N)
+  array[T] real log_lik;
+  array[T] real y_hat;
+  for(t in 1:T)
     {
       log_lik[t]=normal_lpdf(y[t]|mu,sigma);
       y_hat[t]=normal_rng(mu,sigma);
     }
 }
+

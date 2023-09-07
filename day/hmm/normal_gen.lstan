@@ -1,0 +1,32 @@
+generated quantities{
+  matrix[K,AT] prob;
+  {
+  int pos=1;
+  for(n in 1:N)
+    {
+      int T=GT[n];
+
+      matrix[K,T] ob;
+      matrix[K,T] local_prob=rep_matrix(0,K,T);
+      array[T] real yy=segment(y,pos,T);
+      
+  
+      for(k in 1:K)
+        {
+          for(t in 1:T)
+                      {
+              ob[k,t]=normal_lpdf(yy[t]|mu[k] ,sigma);
+            }
+        }
+
+      local_prob = hmm_forward_prob(ob,Gamma,rho);
+       for(t in 1:T)
+          {
+            prob[:,pos+t-1]= local_prob[:,t];
+          }
+
+      pos +=T;
+      
+    }
+    }
+}

@@ -6,18 +6,18 @@ transformed data{
 }
 
 parameters {
-  vector[N]  mu;
+  //  vector[N]  mu;
   real<lower=0> alpha0;
   real<lower=0,upper=1> alpha1;
   real<lower=0,upper=(1-alpha1)> beta1;
   //array[N] real<lower=0> sigma1;
 
   real<lower=0> mu_tau;
-  real mu_z;
+  vector[N] mu_z;
   real mu_beta;
 
   real<lower=0> sigma1_tau;
-  real sigma1_z;
+  vector[N] sigma1_z;
   real sigma1_beta;
 
   real mu_init;

@@ -1,0 +1,6 @@
+  int T;
+  int N;
+  int R;
+  array[T] matrix[N,R] Xs;
+
+

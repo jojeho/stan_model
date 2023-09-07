@@ -80,15 +80,15 @@ model{
 }
 
 generated quantities{
-  matrix[K,T] prob=hmm_hidden_state_prob(ob,Gamma,rho);
-  array[T] int label=hmm_latent_rng(ob,Gamma,rho);
-  vector[T] y_hat;
-  vector[T] log_lik;
-  for(t in 1:T)
-    {
-      y_hat[t]=normal_rng(mu[label[t]],sigma);
-      log_lik[t]=normal_lpdf(y[t]|mu[label[t]],sigma);
-    }
+  matrix[K,T] prob=hmm_forward_prob(ob,Gamma,rho);
+ /*  array[T] int label=hmm_latent_rng(ob,Gamma,rho); */
+ /*  vector[T] y_hat; */
+ /* stud vector[T] log_lik; */
+ /*  for(t in 1:T) */
+ /*    { */
+ /*      y_hat[t]=normal_rng(mu[label[t]],sigma); */
+ /*      log_lik[t]=normal_lpdf(y[t]|mu[label[t]],sigma); */
+ /*    } */
 }
 
 
