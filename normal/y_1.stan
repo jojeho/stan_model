@@ -23,8 +23,8 @@ parameters{
 
 model{
 
-  mu ~ normal(0,0.2);
-  sigma ~normal(0,0.3);
+  mu ~ normal(0,0.03);
+  sigma ~normal(0.3,0.05);
   y ~ normal(mu,sigma);
   //x ~ v(mu,sigma);
 }

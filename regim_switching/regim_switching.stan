@@ -136,6 +136,7 @@ model {
       matrix[N,2] eta;
       eta=make_oblik(y[t],alpha[t],rho[t],y_tm1_init[t],sigma[t]);
       target +=fill_prob(eta,xi1_init[t],p[t]);
+      
     }
 }
 
@@ -144,6 +145,7 @@ model {
 /*   array[T] real y_hat; */
 /*   matrix[N, 2] xi; */
 /*   real f1; */
+
 /*   real f2; */
 /*   vector[2] pp; */
   

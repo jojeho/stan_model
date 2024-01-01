@@ -10,7 +10,7 @@ transformed data {
 parameters {
   real<lower=0> sigma1;
   real<lower=0> sigma2;
-  real mu;
+
 }
 
 transformed parameters {
@@ -23,17 +23,16 @@ transformed parameters {
     lp_l[1] = 0;
     
     for (t in 1:T) {
-      lp_e[t + 1] = lp_e[t] + normal_lpdf(y[t] | mu,sigma1);
-      lp_l[t + 1] = lp_l[t] + normal_lpdf(y[t] | mu,sigma2);
+      lp_e[t + 1] = lp_e[t] + normal_lpdf(y[t] | 0,sigma1);
+      lp_l[t + 1] = lp_l[t] + normal_lpdf(y[t] | 0,sigma2);
     }
     lp = rep_vector(log_unif + lp_l[T + 1], T)
       + head(lp_e, T) - head(lp_l, T);
   }   
 }
 model {
-  mu ~ normal(0,0.5);
-  sigma1 ~ normal(0,5);
-  sigma2 ~ normal(0,5);
+  sigma1 ~ normal(0,1);
+  sigma2 ~ normal(0,1);
   target += log_sum_exp(lp);
 }
 
